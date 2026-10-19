@@ -1,0 +1,19 @@
+# окружения и кэш
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.DS_Store
+
+# сборка пакета
+pixelkid/build/
+pixelkid/dist/
+
+# результаты работы скриптов
+my_pixel_art.png
+my_coloring.png
+slides/*.html
+
+# сторонние материалы (не публикуем)
+Python 1.pdf
