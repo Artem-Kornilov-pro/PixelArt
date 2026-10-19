@@ -43,7 +43,7 @@ em { font-style: normal; color: var(--accent) }
         box-shadow: var(--shadow); flex: 1; position: relative }
 .card h3 { font-size: 30px; font-weight: 800; margin-bottom: 10px; line-height: 1.15 }
 .card p, .txt { font-size: 24px; line-height: 1.38; font-weight: 600; color: var(--text) }
-.big .card p { font-size: 28px } .big .card h3 { font-size: 36px } .big .card { align-self: flex-start; min-height: 400px }
+.big .card p { font-size: 28px } .big .card h3 { font-size: 32px } .big .card { align-self: flex-start; min-height: 400px }
 .sm p { font-size: 21px } .sm h3 { font-size: 26px; margin-bottom: 6px }
 .num { width: 64px; height: 64px; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800;
        font-size: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px }
@@ -117,7 +117,7 @@ def s_title(T):
     p = lambda name: photo(T, name)
     if T["key"] == "shct":
         right = f'''<img class="deco" src="assets/shape_crop.jpg" style="right:0;top:0;height:810px">
-        <img class="deco img px" src="{p("px16")}" style="left:770px;top:70px;width:180px;height:180px;border-radius:50%;border:8px solid #fff">'''
+        <img class="deco img px" src="{p("px16")}" style="left:690px;top:70px;width:180px;height:180px;border-radius:50%;border:8px solid #fff">'''
         logo = T["logo"]
     else:
         right = f'''<div class="deco" style="right:0;top:0;width:540px;height:810px;background:var(--grad)"></div>
@@ -150,7 +150,7 @@ def s_numbers(T, n):
     body = f'''<div class="row" style="align-items:center">
       <div><table class="px8" style="border-radius:20px;overflow:hidden;box-shadow:var(--shadow)">{rows}</table></div>
       <div class="col" style="flex:1;padding-left:20px">
-        <p class="lead">Компьютер не видит котика. Он видит <em>таблицу чисел</em>.</p>
+        <p class="lead">Компьютер не видит {"котика" if T["key"] == "shct" else "людей на фото"}. Он видит <em>таблицу чисел</em>.</p>
         <p class="txt">Картинка — это сетка из маленьких клеточек. В каждой клеточке записан один цвет. Вот такой кусочек 8×8 мы увеличили из фото.</p>
         <div class="card" style="flex:none;padding:20px 26px"><p>Клеточка в 4-м ряду, 4-й столбец:<br><b style="font-size:34px;color:var(--accent)">({r}, {g}, {b})</b></p></div>
       </div></div>'''
