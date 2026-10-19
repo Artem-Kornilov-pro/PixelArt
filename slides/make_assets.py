@@ -26,6 +26,7 @@ def square(img, cx=0.5, cy=0.5, size=None):
     return img.crop((x, y, x + s, y + s)).resize((768, 768), Image.Resampling.LANCZOS)
 
 cat = Image.open(SRC / "cat.png").convert("RGB")
+cat = cat.crop((40, 0, cat.width, cat.height))  # слева в исходнике кусок буквы из PDF
 kids = Image.open(SRC / "hero.png").convert("RGB")
 photos = {"shct": square(cat, 0.5, 0.45), "ms": square(kids, 0.6, 0.5)}
 
