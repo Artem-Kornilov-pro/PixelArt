@@ -29,8 +29,7 @@ python main.py
 Только библиотека:
 
 ```bash
-pip install pixelkid      # PyPI: пока версия 0.1.0, без coloring_pdf
-pip install ./pixelkid    # из репозитория: версия 0.2.0 с PDF-раскраской
+pip install pixelkid
 ```
 
 ```python

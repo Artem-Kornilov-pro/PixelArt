@@ -53,7 +53,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Это установит Pillow, PyQt6 и библиотеку `pixelkid` из папки проекта (вместе с reportlab для PDF). Для разработки удобнее режим `pip install -e ./pixelkid`: изменения в коде библиотеки сразу видны.
+Это установит Pillow, PyQt6 и библиотеку `pixelkid` 0.2.0+ с PyPI (вместе с reportlab для PDF). Чтобы менять код библиотеки, поставьте её из папки проекта в режиме разработки: `pip install -e ./pixelkid` — изменения сразу видны.
 
 **Mac и tkinter.** `main.py` использует окно выбора файла из `tkinter`. Если Python установлен через Homebrew, а запуск падает с `No module named '_tkinter'`, выполните `brew install python-tk@3.14` (версию замените на свою).
 
@@ -143,7 +143,7 @@ python slides/build_slides.py       # PDF
 
 ## Публикация библиотеки на PyPI
 
-Версия 0.1.0 **опубликована**: https://pypi.org/project/pixelkid/. Версия **0.2.0** (с `coloring_pdf`) в репозитории готова, но на PyPI ещё не загружена — до загрузки ставьте её командой `pip install ./pixelkid`. Ниже шаги для публикации.
+Опубликованы версии **0.1.0** (`pixelate`) и **0.2.0** (`pixelate` + `coloring_pdf`): https://pypi.org/project/pixelkid/. Ниже шаги для публикации новых версий.
 
 1. Зарегистрируйтесь на [pypi.org](https://pypi.org) и включите двухфакторную защиту.
 2. Создайте API-токен: Account settings → API tokens.
@@ -167,15 +167,15 @@ python slides/build_slides.py       # PDF
 
 Опубликованную версию нельзя перезаписать: для исправлений увеличьте `version` в `pyproject.toml` и в `src/pixelkid/__init__.py`.
 
-**Без PyPI.** Библиотеку можно раздавать файлом `.whl` (после `python -m build` он лежит в `pixelkid/dist/`): `pip install pixelkid-0.1.0-py3-none-any.whl`. Или установить прямо из папки: `pip install ./pixelkid`.
+**Без PyPI.** Библиотеку можно раздавать файлом `.whl` (после `python -m build` он лежит в `pixelkid/dist/`): `pip install pixelkid-0.2.0-py3-none-any.whl`. Или установить прямо из папки: `pip install ./pixelkid`.
 
 ## Частые проблемы
 
 | Ошибка | Решение |
 |---|---|
 | `No module named 'PIL'` | `pip install pillow` |
-| `No module named 'pixelkid'` | `pip install ./pixelkid` (из папки проекта) |
-| `cannot import name 'coloring_pdf'` | Установлена старая версия 0.1.0: `pip install -U ./pixelkid` |
+| `No module named 'pixelkid'` | `pip install pixelkid` (или из папки проекта: `pip install ./pixelkid`) |
+| `cannot import name 'coloring_pdf'` | Установлена старая версия 0.1.0: `pip install -U pixelkid` |
 | `No module named 'reportlab'` | `pip install reportlab` (или переустановить `pixelkid`) |
 | `No module named '_tkinter'` | Mac: `brew install python-tk@3.14`. Linux: `sudo apt install python3-tk` |
 | `externally-managed-environment` | Работайте в виртуальном окружении (`python3 -m venv .venv`) |
