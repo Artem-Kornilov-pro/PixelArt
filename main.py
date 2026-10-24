@@ -1,6 +1,6 @@
 from tkinter import Tk, filedialog
 
-from pixelkid import pixelate
+from pixelkid import pixelate, coloring_pdf
 
 root = Tk()
 root.withdraw()
@@ -20,6 +20,10 @@ colors = int(input("Количество цветов (например, 16, 32 
 
 # 3. Делаем пиксель-арт и сохраняем в папку проекта
 result = pixelate(file_path, pixel_size=pixel_size, colors=colors, save_as="my_pixel_art.png")
-
 print("Готово! Файл my_pixel_art.png сохранён в папке проекта")
+
+# 4. Делаем PDF-раскраску: 32 клетки в ширину и 12 цветов, чтобы удобно раскрашивать
+coloring_pdf(file_path, save_as="my_coloring.pdf", cells=32, colors=12)
+print("И раскраска my_coloring.pdf тоже!")
+
 result.show()

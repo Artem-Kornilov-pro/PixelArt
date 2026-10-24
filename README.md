@@ -1,6 +1,6 @@
 # Мастер-класс «Пиксель-арт из твоего фото»
 
-Материалы мастер-класса по Python для детей 11–17 лет: как устроены картинки (пиксели, разрешение, RGB, соотношение сторон, форматы) и как превратить фото в пиксель-арт.
+Материалы мастер-класса по Python для детей 11–17 лет: как устроены картинки (пиксели, разрешение, RGB, соотношение сторон, форматы) и как превратить фото в пиксель-арт и PDF-раскраску по номерам.
 
 ![До и после](docs/img/before_after.png)
 
@@ -33,10 +33,15 @@ pip install pixelkid
 ```
 
 ```python
-from pixelkid import pixelate
+from pixelkid import pixelate, coloring_pdf
 
 pixelate("photo.jpg", pixel_size=12, colors=16, save_as="art.png")
+coloring_pdf("photo.jpg", save_as="coloring.pdf")   # PDF-раскраска по номерам
 ```
+
+## PDF-раскраска
+
+![PDF-раскраска](docs/img/coloring.png)
 
 ## Приложение «Пиксель-раскраска»
 

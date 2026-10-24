@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
     QSlider, QVBoxLayout, QWidget,
 )
 
-from pixelkid import pixelate
+from pixelkid import pixelate, coloring_pdf
 
 CELL = 16  # размер одной клетки на экране
 
@@ -112,6 +112,8 @@ class Window(QWidget):
         self.fill_button.clicked.connect(self.canvas.fill_all)
         self.save_button = QPushButton("Сохранить")
         self.save_button.clicked.connect(self.save)
+        self.pdf_button = QPushButton("PDF-раскраска")
+        self.pdf_button.clicked.connect(self.save_pdf)
 
         top = QHBoxLayout()
         top.addWidget(self.open_button)
@@ -123,6 +125,7 @@ class Window(QWidget):
         bottom.addWidget(self.hint_button)
         bottom.addWidget(self.fill_button)
         bottom.addWidget(self.save_button)
+        bottom.addWidget(self.pdf_button)
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
@@ -163,7 +166,9 @@ class Window(QWidget):
 
     def make_palette(self):
         while self.palette_box.count():
-            self.palette_box.takeAt(0).widget().deleteLater()
+            item = self.palette_box.takeAt(0)
+            if item.widget():          # в конце ряда стоит «растяжка», она не кнопка
+                item.widget().setParent(None)
         for number, color in enumerate(self.canvas.palette):
             button = QPushButton(str(number + 1))
             button.setFixedSize(34, 34)
@@ -186,6 +191,14 @@ class Window(QWidget):
         path, _ = QFileDialog.getSaveFileName(self, "Сохранить", "my_coloring.png", "PNG (*.png)")
         if path:
             self.canvas.to_image().save(path)
+
+    def save_pdf(self):
+        if not self.photo:
+            return
+        path, _ = QFileDialog.getSaveFileName(self, "Сохранить раскраску", "my_coloring.pdf", "PDF (*.pdf)")
+        if path:
+            # те же клетки и цвета, что на экране, -- номера в PDF совпадают с приложением
+            coloring_pdf(self.photo, save_as=path, cells=self.size_slider.value(), colors=self.colors_slider.value())
 
 
 if __name__ == "__main__":
