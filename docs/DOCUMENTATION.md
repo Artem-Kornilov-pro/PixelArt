@@ -22,7 +22,10 @@ First_master_class/
 ├── pixelkid/                библиотека (пакет для pip)
 │   ├── pyproject.toml
 │   ├── README.md            описание функции
-│   ├── src/pixelkid/__init__.py
+│   ├── src/pixelkid/
+│   │   ├── core.py          функция pixelate
+│   │   ├── coloring.py      функция coloring_pdf (PDF-раскраска)
+│   │   └── fonts/           шрифт Inter (лицензия OFL)
 │   └── tests/
 ├── app/pixel_paint.py       приложение «Пиксель-раскраска» (PyQt6)
 ├── slides/
@@ -50,7 +53,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Это установит Pillow, PyQt6 и библиотеку `pixelkid` с PyPI. Чтобы работать с локальной версией библиотеки, выполните `pip install -e ./pixelkid`.
+Это установит Pillow, PyQt6 и библиотеку `pixelkid` из папки проекта (вместе с reportlab для PDF). Для разработки удобнее режим `pip install -e ./pixelkid`: изменения в коде библиотеки сразу видны.
 
 **Mac и tkinter.** `main.py` использует окно выбора файла из `tkinter`. Если Python установлен через Homebrew, а запуск падает с `No module named '_tkinter'`, выполните `brew install python-tk@3.14` (версию замените на свою).
 
@@ -60,7 +63,8 @@ pip install -r requirements.txt
 
 1. Открывается окно выбора фото.
 2. В терминале вводятся размер пикселя и число цветов.
-3. `pixelate(...)` делает пиксель-арт и сохраняет его в `my_pixel_art.png` в текущей папке (откуда запущена программа). Результат открывается.
+3. `pixelate(...)` делает пиксель-арт и сохраняет его в `my_pixel_art.png` в текущей папке (откуда запущена программа).
+4. `coloring_pdf(...)` сохраняет рядом `my_coloring.pdf` — раскраску по номерам (32 клетки в ширину, 12 цветов). Пиксель-арт открывается на экране.
 
 ```bash
 python main.py
@@ -73,11 +77,21 @@ python main.py
 Подробно: [pixelkid/README.md](../pixelkid/README.md). Кратко:
 
 ```python
-from pixelkid import pixelate
+from pixelkid import pixelate, coloring_pdf
 pixelate("photo.jpg", pixel_size=12, colors=16, save_as="art.png")
+coloring_pdf("photo.jpg", save_as="coloring.pdf", cells=32, colors=12)
 ```
 
-Внутри три шага: уменьшить (`resize` + `LANCZOS`) → оставить N цветов (`quantize`) → увеличить без размытия (`resize` + `NEAREST`).
+Внутри `pixelate` три шага: уменьшить (`resize` + `LANCZOS`) → оставить N цветов (`quantize`) → увеличить без размытия (`resize` + `NEAREST`).
+
+### PDF-раскраска (`coloring_pdf`)
+
+Цветной PDF формата A4 в стиле МАСТЕРСАМ: логотип «М» (нарисован векторно по SVG с mastersam.org), оранжевый `#FF6A00`, шрифт Inter.
+
+- **Страница 1 — раскраска:** сетка клеток, в каждой номер цвета; каждая 10-я линия оранжевая, чтобы легче считать; палитра «номер · квадратик цвета · RGB»; строка «Имя».
+- **Страница 2 — ответ:** та же сетка, закрашенная цветами.
+
+Ограничения для печати: `cells` от 4 до 60, `colors` от 2 до 24. Номер 1 — самый частый цвет, так же нумерует приложение. PDF строится библиотекой reportlab, шрифты Inter лежат в пакете (`pixelkid/src/pixelkid/fonts`, лицензия OFL).
 
 **Тесты:**
 
@@ -103,6 +117,7 @@ python app/pixel_paint.py photo.jpg    # сразу с фото
 | Показать подсказку (зажми) | Пока кнопка зажата, показывается правильная картинка |
 | Закрасить всё | Автозаполнение |
 | Сохранить | PNG: каждая клетка 20×20 пикселей, незакрашенные — белые |
+| PDF-раскраска | PDF для печати через `coloring_pdf` с теми же клетками и цветами, что на экране: номера и палитра совпадают |
 
 Приложение сделано как демонстрация: оно намеренно простое и нужно, чтобы показать, как функция `pixelate` становится частью программы с окнами. Вся логика в одном файле: класс `Canvas` (полотно) и `Window` (окно).
 
@@ -128,7 +143,7 @@ python slides/build_slides.py       # PDF
 
 ## Публикация библиотеки на PyPI
 
-Версия 0.1.0 **опубликована**: https://pypi.org/project/pixelkid/. Ниже шаги для новых версий.
+Версия 0.1.0 **опубликована**: https://pypi.org/project/pixelkid/. Версия **0.2.0** (с `coloring_pdf`) в репозитории готова, но на PyPI ещё не загружена — до загрузки ставьте её командой `pip install ./pixelkid`. Ниже шаги для публикации.
 
 1. Зарегистрируйтесь на [pypi.org](https://pypi.org) и включите двухфакторную защиту.
 2. Создайте API-токен: Account settings → API tokens.
@@ -160,6 +175,8 @@ python slides/build_slides.py       # PDF
 |---|---|
 | `No module named 'PIL'` | `pip install pillow` |
 | `No module named 'pixelkid'` | `pip install ./pixelkid` (из папки проекта) |
+| `cannot import name 'coloring_pdf'` | Установлена старая версия 0.1.0: `pip install -U ./pixelkid` |
+| `No module named 'reportlab'` | `pip install reportlab` (или переустановить `pixelkid`) |
 | `No module named '_tkinter'` | Mac: `brew install python-tk@3.14`. Linux: `sudo apt install python3-tk` |
 | `externally-managed-environment` | Работайте в виртуальном окружении (`python3 -m venv .venv`) |
 | `ValueError: pixel_size должен быть 2 или больше` | Размер пикселя должен быть числом от 2 |
