@@ -14,7 +14,7 @@ pixelate("photo.jpg", pixel_size=12, colors=16, save_as="art.png")
 pip install pixelkid
 ```
 
-Нужен Python 3.8+. Вместе с `pixelkid` автоматически установятся Pillow, NumPy и reportlab.
+Нужен Python 3.9+ (проверено на 3.9, 3.11 и 3.13). Вместе с `pixelkid` автоматически установятся Pillow, NumPy и reportlab.
 
 ## Функция `pixelate`
 
@@ -46,7 +46,7 @@ coloring_pdf(image, save_as="coloring.pdf", cells=32, colors=12, title="Пикс
 |---|---|---|
 | `image` | Путь к файлу или картинка Pillow | — |
 | `save_as` | Куда сохранить PDF | `"coloring.pdf"` |
-| `cells` | Сколько клеток в ширину, от 4 до 60 | `32` |
+| `cells` | Сколько клеток в ширину, от 4 до 60. Для вертикальных фото — не больше 40, иначе номера будут слишком мелкими | `32` |
 | `colors` | Сколько цветов в палитре, от 2 до 24 | `12` |
 | `title` | Заголовок на листе | `"Пиксель-раскраска"` |
 

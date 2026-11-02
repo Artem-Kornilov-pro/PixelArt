@@ -53,7 +53,7 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Это установит Pillow, PyQt6 и библиотеку `pixelkid` 0.2.0+ с PyPI (вместе с reportlab для PDF). Чтобы менять код библиотеки, поставьте её из папки проекта в режиме разработки: `pip install -e ./pixelkid` — изменения сразу видны.
+Это установит Pillow, PyQt6 и библиотеку `pixelkid` с PyPI (вместе с NumPy и reportlab). Чтобы менять код библиотеки, поставьте её из папки проекта в режиме разработки: `pip install -e ./pixelkid` — изменения сразу видны.
 
 **Mac и tkinter.** `main.py` использует окно выбора файла из `tkinter`. Если Python установлен через Homebrew, а запуск падает с `No module named '_tkinter'`, выполните `brew install python-tk@3.14` (версию замените на свою).
 
@@ -111,6 +111,13 @@ coloring_pdf("photo.jpg", save_as="coloring.pdf", cells=32, colors=12)
 
 Ограничения для печати: `cells` от 4 до 60, `colors` от 2 до 24. Номер 1 — самый частый цвет, так же нумерует приложение. PDF строится библиотекой reportlab, шрифты Inter лежат в пакете (`pixelkid/src/pixelkid/fonts`, лицензия OFL).
 
+**Какие фото подходят.** Лист A4 вертикальный, поэтому:
+
+- **Горизонтальное фото** занимает только верхнюю часть листа: при 32 клетках в ширину выходит около 21 ряда. Для деталей берите `cells=48–60`.
+- **Вертикальное фото (2:3)** — не больше 40 клеток: при 60 клетках получится 90 рядов, клетка станет ~2 мм, а номера — нечитаемыми.
+- Если человек или предмет занимает малую часть кадра, сначала **обрежьте фото** вокруг него — те же клетки пойдут на главное, а не на фон.
+- **Тёмные фото** дают много почти чёрных оттенков, их трудно различить карандашами. Лучше всего — светлые, контрастные фото.
+
 **Тесты:**
 
 ```bash
@@ -161,7 +168,7 @@ python slides/build_slides.py       # PDF
 
 ## Публикация библиотеки на PyPI
 
-Опубликованы версии **0.1.0** (`pixelate`) и **0.2.0** (`pixelate` + `coloring_pdf`): https://pypi.org/project/pixelkid/. Ниже шаги для публикации новых версий.
+Опубликованы версии **0.1.0** (`pixelate`), **0.2.0** (+ `coloring_pdf`) и **0.3.0** (новый подбор цветов): https://pypi.org/project/pixelkid/. Ниже шаги для публикации новых версий.
 
 1. Зарегистрируйтесь на [pypi.org](https://pypi.org) и включите двухфакторную защиту.
 2. Создайте API-токен: Account settings → API tokens.
@@ -185,7 +192,7 @@ python slides/build_slides.py       # PDF
 
 Опубликованную версию нельзя перезаписать: для исправлений увеличьте `version` в `pyproject.toml` и в `src/pixelkid/__init__.py`.
 
-**Без PyPI.** Библиотеку можно раздавать файлом `.whl` (после `python -m build` он лежит в `pixelkid/dist/`): `pip install pixelkid-0.2.0-py3-none-any.whl`. Или установить прямо из папки: `pip install ./pixelkid`.
+**Без PyPI.** Библиотеку можно раздавать файлом `.whl` (после `python -m build` он лежит в `pixelkid/dist/`): `pip install pixelkid-0.3.0-py3-none-any.whl`. Или установить прямо из папки: `pip install ./pixelkid`.
 
 ## Частые проблемы
 
