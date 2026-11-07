@@ -10,6 +10,7 @@
 |---|---|
 | Библиотека `pixelkid` ([PyPI](https://pypi.org/project/pixelkid/)) | [pixelkid/](pixelkid/README.md) |
 | Скрипт для детей | [main.py](main.py) |
+| Пример фото для пробы | [examples/cat.jpg](examples/cat.jpg) |
 | Приложение «Пиксель-раскраска» (PyQt6) | [app/pixel_paint.py](app/pixel_paint.py) |
 | Презентация (стиль ШЦТ) | [slides/presentation_shct.pdf](slides/presentation_shct.pdf) |
 | Презентация (стиль МАСТЕРСАМ) | [slides/presentation_mastersam.pdf](slides/presentation_mastersam.pdf) |

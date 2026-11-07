@@ -18,6 +18,7 @@
 ```
 First_master_class/
 ├── main.py                  скрипт для детей (использует pixelkid)
+├── examples/cat.jpg         пример фото: выберите его в окне main.py
 ├── requirements.txt         зависимости всего проекта
 ├── pixelkid/                библиотека (пакет для pip)
 │   ├── pyproject.toml
