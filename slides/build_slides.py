@@ -5,6 +5,8 @@
 Нужны: playwright (+ playwright install chromium) и Pillow.
 """
 import asyncio
+import html
+import re
 from pathlib import Path
 from PIL import Image
 
@@ -55,6 +57,9 @@ em { font-style: normal; color: var(--accent) }
 .code { background: #17142b; color: #e9e6ff; border-radius: 28px; padding: 30px 36px; font-family: 'JetBrains Mono', Menlo, monospace;
         font-size: 24px; line-height: 1.5; white-space: pre; box-shadow: var(--shadow) }
 .code .c { color: #8f8ab8 } .code .k { color: #ff9ad5 } .code .s { color: #9be29b } .code .n { color: #ffd479 }
+.code.full { white-space: normal; font-size: 16.5px; line-height: 1.28; padding: 18px 30px }
+.code .ln { white-space: pre } .code .ln.blank { height: 7px }
+.code .no { color: #5d5880; display: inline-block; width: 34px; text-align: right; margin-right: 22px; user-select: none }
 .arrow { font-size: 54px; font-weight: 800; color: var(--accent); align-self: center }
 .grad { background: var(--grad); color: #fff }
 .grad h2 { color: #fff } .grad em { color: #fff; text-decoration: underline; text-decoration-thickness: 6px }
@@ -293,6 +298,28 @@ pixelate(<span class="s">"photo.jpg"</span>,
     return slide(T, "Наша библиотека <em>pixelkid</em>", body, n)
 
 
+def _highlight(line):
+    """Простая подсветка Python: комментарии, строки, ключевые слова, числа."""
+    out, pos = [], 0
+    for m in re.finditer(r'(#.*$)|("[^"]*")|\b(from|import|if|not|raise|for|in|def|return)\b|\b(\d+)\b', line):
+        out.append(html.escape(line[pos:m.start()]))
+        cls = "c" if m.group(1) else "s" if m.group(2) else "k" if m.group(3) else "n"
+        out.append(f'<span class="{cls}">{html.escape(m.group(0))}</span>')
+        pos = m.end()
+    out.append(html.escape(line[pos:]))
+    return "".join(out)
+
+
+def s_full_code(T, n):
+    """Полный код main.py -- берётся прямо из файла, поэтому всегда совпадает с программой."""
+    lines = (HERE.parent / "main.py").read_text(encoding="utf-8").rstrip("\n").split("\n")
+    rows = "".join(f'<div class="ln blank"></div>' if not line.strip() else
+                   f'<div class="ln"><span class="no">{i}</span>{_highlight(line)}</div>'
+                   for i, line in enumerate(lines, 1))
+    body = f'''<div class="code full" style="position:absolute;left:0;right:0;top:-14px">{rows}</div>'''
+    return slide(T, "Полный код программы <em>main.py</em>", body, n)
+
+
 def s_app(T, n):
     body = f'''<div class="row" style="align-items:center"><img class="img" src="assets/app_shot.png" style="height:540px">
       <div class="col" style="flex:1"><p class="lead">Приложение <b>«Пиксель-раскраска»</b> на PyQt6.</p>
@@ -311,6 +338,10 @@ def s_tasks(T, n):
 
 
 def s_end(T, n):
+    if T["key"] == "ms":
+        # Финальный слайд МАСТЕРСАМ с QR записи свёрстан в Figma:
+        # https://www.figma.com/design/241Qx52GDFbDMbpShxJMQk (экспорт PNG x2)
+        return '<section class="slide" style="padding:0"><img src="assets/ms_final_qr.png" style="width:1440px;height:810px;display:block"></section>'
     return slide(T, "Что <em>дальше</em>?", f'''<div class="row"><div class="col" style="flex:1.2;justify-content:center;gap:26px">
       <p class="lead">Сегодня ты написал программу, поставил библиотеку и сделал приложение. Это и есть программирование!</p>
       <div class="card" style="flex:none;padding:22px 28px"><p>{T["courses"]}</p></div>
@@ -318,7 +349,7 @@ def s_end(T, n):
       <div class="col" style="flex:.6;align-items:center;justify-content:center"><img class="img px" src="{photo(T, "px16")}" style="width:400px;height:400px;border:8px solid #fff"></div></div>''', n)
 
 
-SLIDES = [s_plan, s_numbers, s_pixel, s_resolution, s_rgb, s_ratio, s_formats, s_tiktok, s_how, s_code, s_lib, s_app, s_tasks, s_end]
+SLIDES = [s_plan, s_numbers, s_pixel, s_resolution, s_rgb, s_ratio, s_formats, s_tiktok, s_how, s_code, s_lib, s_full_code, s_app, s_tasks, s_end]
 
 
 def build_html(T):
