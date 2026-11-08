@@ -22,7 +22,7 @@ THEMES = {
     "ms": dict(
         key="ms", out="presentation_mastersam", font="Inter:wght@400;600;700;800;900",
         logo='<div class="logo"><img src="assets/m_logo.svg"><span>МАСТЕРСАМ</span></div>',
-        logo_white='<div class="logo"><img src="assets/m_logo.svg"><span>МАСТЕРСАМ</span></div>',
+        logo_white='<div class="logo"><img src="assets/m_logo_white.svg"><span>МАСТЕРСАМ</span></div>',
         courses="Python (12–17 лет) · Python + ИИ (14–17 лет) · нейросети и ИИ-агенты",
     ),
 }
@@ -85,15 +85,18 @@ table.px8 { border-collapse: collapse } table.px8 td { width: 54px; height: 54px
 /* ---- МАСТЕРСАМ ---- */
 .t-ms { --font: 'Inter'; --ink: #251208; --text: #3f312b; --accent: #ff6a00; --soft: #fff0e4; --bg: #fffaf6; --card: #fff;
   --grad: linear-gradient(135deg, #ff8a00 0%, #ff6a00 100%); --hw: 900; --radius: 28px;
-  --cardborder: 2px solid #f0ded0; --shadow: 0 10px 28px rgba(255,106,0,.14) }
+  --cardborder: 2px solid #f0ded0; --shadow: none }
 .t-ms .logo { height: auto; top: 30px; display: flex; align-items: center; gap: 14px }
 .t-ms .logo img { height: 60px }
 .t-ms .logo span { font-weight: 900; font-size: 28px; letter-spacing: 1.5px; color: var(--ink) }
 .t-ms .grad .logo span { color: #fff }
-.t-ms .grad .logo img { outline: 4px solid #fff; border-radius: 16px }
+/* на оранжевом фоне -- инверсный логотип (белый квадрат, оранжевая М), без наложения оранжевого на оранжевый */
 .t-ms .pix { position: absolute; background: var(--grad); border-radius: 6px }
 .t-ms .grad { background: linear-gradient(135deg, #ff8a00 0%, #ff5a00 100%) }
 .t-ms .dark { background: #18100c }
+/* МАСТЕРСАМ: без карточек-прямоугольников (рамка, тень, подложка) -- только содержимое */
+.t-ms .card { background: none; border: none; box-shadow: none; padding-left: 0 !important; padding-right: 0 !important }
+.t-ms .big .card { min-height: 0 }
 """
 
 
@@ -354,6 +357,10 @@ SLIDES = [s_plan, s_numbers, s_pixel, s_resolution, s_rgb, s_ratio, s_formats, s
 
 def build_html(T):
     pages = [s_title(T)] + [fn(T, i + 2) for i, fn in enumerate(SLIDES)]
+    if T["key"] == "ms":
+        # Слайд «Наши соцсети» с QR на Telegram и ВКонтакте, свёрстан в Figma:
+        # https://www.figma.com/design/241Qx52GDFbDMbpShxJMQk (экспорт PNG x2)
+        pages.append('<section class="slide" style="padding:0"><img src="assets/ms_socials.png" style="width:1440px;height:810px;display:block"></section>')
     fonts = f"https://fonts.googleapis.com/css2?family={T['font'].replace(' ', '+')}&family=JetBrains+Mono:wght@400;700&display=swap"
     return f'<!doctype html><html lang="ru"><head><meta charset="utf-8"><link rel="stylesheet" href="{fonts}"><style>{CSS}</style></head><body class="t-{T["key"]}">{"".join(pages)}</body></html>'
 
